@@ -8,7 +8,7 @@ var Twitter = new twit(config);
 // find latest tweet according to the 'q' in params
 var retweet = function() {
   var params = {
-    q: '#happypets',
+    q: '#pets',
     result_type: 'recent',
     lang: 'en'
   };
@@ -16,6 +16,10 @@ var retweet = function() {
   Twitter.get('search/tweets', params, (err, data) => {
     if (!err) {
       // grab ID of tweet to retweet
+      var tweet = data.statuses;
+      var randomTweet = ranDom(tweet);
+      console.log('LOG DA RETURN DATA: ', data.statuses.length);
+      
       var retweetId = data.statuses[0].id_str;
       // tell twitter to retweet
       Twitter.post('statuses/retweet/:id', {
@@ -36,7 +40,7 @@ var retweet = function() {
   });
 }
 retweet();
-setInterval(retweet, 3000000);
+setInterval(retweet, 15000);
 
 // FAVORITE BOT ====================================================
 
@@ -70,7 +74,7 @@ var favoriteTweet = () => {
   });
 };
 favoriteTweet();
-setInterval(favoriteTweet, 3600000);
+setInterval(favoriteTweet, 30000);
 
 function ranDom(arr) {
   var index = Math.floor(Math.random() * arr.length);
