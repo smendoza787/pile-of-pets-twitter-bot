@@ -1,5 +1,5 @@
-const twit = require('twit');
-const config = require('./config.js');
+const twit = require('twit'),
+      config = require('./config.js');
 
 var Twitter = new twit(config);
 
@@ -35,7 +35,44 @@ var retweet = function() {
     }
   });
 }
-// grab & retweet as soon as program is running...
 retweet();
-// retweet every 50 minutes
 setInterval(retweet, 3000000);
+
+// FAVORITE BOT ====================================================
+
+// find a random tweet and favorite it
+var favoriteTweet = () => {
+  var params = {
+    q: '#happypets',
+    result_type: 'recent',
+    lang: 'en'
+  };
+
+  // find the tweet
+  Twitter.get('search/tweets', params, (err, data) => {
+    // find tweets
+    var tweet = data.statuses;
+    var randomTweet = ranDom(tweet);
+
+    // if random tweet exists
+    if (typeof randomTweet != 'undefined') {
+      // tell twitter to favorite
+      Twitter.post('favorites/create', {
+        id: randomTweet.id_str
+      }, (err, response) => {
+        if (err) {
+          console.log('Cannot be favorited...Error');
+        } else {
+          console.log('Favorited...success!');
+        }
+      });
+    }
+  });
+};
+favoriteTweet();
+setInterval(favoriteTweet, 3600000);
+
+function ranDom(arr) {
+  var index = Math.floor(Math.random() * arr.length);
+  return arr[index];
+}
